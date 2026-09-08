@@ -88,6 +88,21 @@ def test_url_query_params() -> None:
     assert str(u) == "https://example.org/path/"
 
 
+def test_url_multivalue_query_params() -> None:
+    u = URL("https://example.org/path/?x=1")
+    u = u.include_query_params(a="b", c=["d", "e"])
+    assert str(u) == "https://example.org/path/?x=1&a=b&c=d&c=e"
+
+    u = u.include_query_params(c=["f"])
+    assert str(u) == "https://example.org/path/?x=1&a=b&c=f"
+
+    u = u.replace_query_params(c=["g", "h"])
+    assert str(u) == "https://example.org/path/?c=g&c=h"
+
+    u = u.replace_query_params(c=("i", "j"))
+    assert str(u) == "https://example.org/path/?c=i&c=j"
+
+
 def test_hidden_password() -> None:
     u = URL("https://example.org/path/to/somewhere")
     assert repr(u) == "URL('https://example.org/path/to/somewhere')"
